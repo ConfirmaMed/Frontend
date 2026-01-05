@@ -10,6 +10,7 @@ export const useUsers = (params: {
   limit?: number | null;
   offset?: number | null;
   search?: string | null;
+  status?: boolean | null;
 }) => {
   return useQuery({
     queryKey: ["users", params],
@@ -17,7 +18,8 @@ export const useUsers = (params: {
       usersService.getAllUsers(
         params.limit ?? null,
         params.offset ?? null,
-        params.search ?? null
+        params.search ?? null,
+        params.status ?? null
       ),
     staleTime: 5 * 60 * 1000, // 5 minutos
   });

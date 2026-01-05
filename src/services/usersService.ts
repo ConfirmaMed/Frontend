@@ -12,7 +12,8 @@ const API_URL = "/users";
 const getAllUsers = async (
   limit: number | null = null,
   offset: number | null = null,
-  search: string | null = null
+  search: string | null = null,
+  status: boolean | null = null
 ) => {
   try {
     const response = await axiosService.get(`${API_URL}`, {
@@ -20,6 +21,7 @@ const getAllUsers = async (
         limit,
         offset,
         search,
+        status,
       },
     });
     return response.data;

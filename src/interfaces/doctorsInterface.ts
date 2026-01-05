@@ -10,6 +10,7 @@ export interface Doctor {
     code?: string;
   };
   email: string;
+  status: boolean;
 }
 
 // Interfaz para crear un nuevo doctor

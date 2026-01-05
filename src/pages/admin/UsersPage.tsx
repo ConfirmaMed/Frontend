@@ -1,5 +1,11 @@
 import Container from "@/components/partials/Container";
-import { Users, Search, ChevronsLeft, ChevronsRight } from "lucide-react";
+import {
+  Users,
+  Search,
+  ChevronsLeft,
+  ChevronsRight,
+  Filter,
+} from "lucide-react";
 import { useState } from "react";
 import { useUsers } from "@/hooks/useUsers";
 import { Input } from "@/components/ui/input";
@@ -18,11 +24,19 @@ import { Badge } from "@/components/ui/badge";
 import type { User } from "@/interfaces/usersInterface";
 import { toast } from "sonner";
 import UserModal from "@/components/modals/UserModal";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const UsersPage = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [search, setSearch] = useState<string>("");
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [statusFilter, setStatusFilter] = useState<string>("all");
   const [modalMode, setModalMode] = useState<"create" | "edit">("create");
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const itemsPerPage = 25;
@@ -30,11 +44,16 @@ const UsersPage = () => {
   // Calcular offset para la paginación
   const offset = (currentPage - 1) * itemsPerPage;
 
+  // Determinar el valor del filtro de estado
+  const statusValue =
+    statusFilter === "all" ? null : statusFilter === "active" ? true : false;
+
   // Obtener usuarios con los filtros aplicados
   const { data, isLoading, isError, error, refetch } = useUsers({
     limit: itemsPerPage,
     offset: offset,
     search: search || null,
+    status: statusValue,
   });
 
   // Extraer los items de la respuesta de la API
@@ -60,6 +79,11 @@ const UsersPage = () => {
   const handleRefetchData = () => {
     refetch();
     toast.success("Actualizando y sincronizando usuarios");
+  };
+
+  const handleStatusChange = (value: string) => {
+    setStatusFilter(value);
+    setCurrentPage(1); // Resetear a la primera página al cambiar filtro
   };
 
   const handleOpenCreateModal = () => {
@@ -98,6 +122,19 @@ const UsersPage = () => {
                   className="pl-9"
                 />
               </div>
+            </div>
+            <div className="w-full sm:w-fit">
+              <Select value={statusFilter} onValueChange={handleStatusChange}>
+                <SelectTrigger className="">
+                  <Filter className="h-4 w-4 mr-2" />
+                  <SelectValue placeholder="Estado" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos los estados</SelectItem>
+                  <SelectItem value="active">Activos</SelectItem>
+                  <SelectItem value="inactive">Inactivos</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </Card>

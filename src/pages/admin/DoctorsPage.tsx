@@ -1,5 +1,11 @@
 import Container from "@/components/partials/Container";
-import { Stethoscope, Search, ChevronsLeft, ChevronsRight } from "lucide-react";
+import {
+  Stethoscope,
+  Search,
+  ChevronsLeft,
+  ChevronsRight,
+  Filter,
+} from "lucide-react";
 import { useState } from "react";
 import { useDoctors } from "@/hooks/useDoctors";
 import { Input } from "@/components/ui/input";
@@ -17,11 +23,20 @@ import { Skeleton } from "@/components/ui/skeleton";
 import type { Doctor } from "@/interfaces/doctorsInterface";
 import { toast } from "sonner";
 import DoctorModal from "@/components/modals/DoctorModal";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
 
 const DoctorsPage = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [search, setSearch] = useState<string>("");
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [statusFilter, setStatusFilter] = useState<string>("all");
   const [modalMode, setModalMode] = useState<"create" | "edit">("create");
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
   const itemsPerPage = 25;
@@ -29,11 +44,15 @@ const DoctorsPage = () => {
   // Calcular offset para la paginación
   const offset = (currentPage - 1) * itemsPerPage;
 
+  const statusValue =
+    statusFilter === "all" ? null : statusFilter === "active" ? true : false;
+
   // Obtener doctores con los filtros aplicados
   const { data, isLoading, isError, error, refetch } = useDoctors({
     limit: itemsPerPage,
     offset: offset,
     search: search || null,
+    status: statusValue,
   });
 
   // Extraer los items de la respuesta de la API
@@ -67,6 +86,11 @@ const DoctorsPage = () => {
     setModalOpen(true);
   };
 
+  const handleStatusChange = (value: string) => {
+    setStatusFilter(value);
+    setCurrentPage(1); // Resetear a la primera página al cambiar filtro
+  };
+
   const handleOpenEditModal = (doctor: Doctor) => {
     setModalMode("edit");
     setSelectedDoctor(doctor);
@@ -98,6 +122,19 @@ const DoctorsPage = () => {
                 />
               </div>
             </div>
+            <div className="w-full sm:w-fit">
+              <Select value={statusFilter} onValueChange={handleStatusChange}>
+                <SelectTrigger className="">
+                  <Filter className="h-4 w-4 mr-2" />
+                  <SelectValue placeholder="Estado" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos los estados</SelectItem>
+                  <SelectItem value="active">Activos</SelectItem>
+                  <SelectItem value="inactive">Inactivos</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </Card>
 
@@ -111,6 +148,7 @@ const DoctorsPage = () => {
                 <TableHead>Tipo Doc.</TableHead>
                 <TableHead>Documento</TableHead>
                 <TableHead>Email</TableHead>
+                <TableHead className="w-[100px]">Estado</TableHead>
                 <TableHead className="w-[100px] text-right">Acciones</TableHead>
               </TableRow>
             </TableHeader>
@@ -178,6 +216,13 @@ const DoctorsPage = () => {
                     </TableCell>
                     <TableCell className="text-muted-foreground">
                       {doctor.email}
+                    </TableCell>
+                    <TableCell>
+                      <Badge
+                        variant={doctor.status ? "success" : "destructive"}
+                      >
+                        {doctor.status ? "Activo" : "Inactivo"}
+                      </Badge>
                     </TableCell>
                     <TableCell className="text-right">
                       <Button

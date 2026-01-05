@@ -90,7 +90,7 @@ const DoctorModal = ({
           document: data.document,
           documentTypeId: data.documentType.id,
           email: data.email,
-          status: true, // Asumiendo que siempre está activo o agregar campo status
+          status: data.status, // Asumiendo que siempre está activo o agregar campo status
         });
       } else if (mode === "create") {
         form.reset({
