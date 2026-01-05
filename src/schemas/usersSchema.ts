@@ -58,10 +58,6 @@ export const userUpdateSchema = z.object({
     .string()
     .min(4, "El nombre de usuario debe tener al menos 4 caracteres")
     .optional(),
-  password: z
-    .string()
-    .min(8, "La contraseña debe tener al menos 8 caracteres")
-    .optional(),
   officeId: z
     .number({
       message: "La oficina no es válida",

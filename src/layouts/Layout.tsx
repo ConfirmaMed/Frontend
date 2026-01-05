@@ -7,7 +7,6 @@ const LayoutAdmin = () => {
   return (
     <>
       <div className="w-full h-screen overflow-hidden">
-
         <div className="font-poppins w-full h-screen overflow-hidden">
           <SidebarProvider>
             <AppSidebar />

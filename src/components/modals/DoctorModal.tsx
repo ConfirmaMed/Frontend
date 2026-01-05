@@ -72,7 +72,7 @@ const DoctorModal = ({
       name: "",
       lastName: "",
       document: "",
-      documentTypeId: 0,
+      documentTypeId: undefined,
       email: "",
       status: true,
     },
@@ -97,11 +97,21 @@ const DoctorModal = ({
           name: "",
           lastName: "",
           document: "",
-          documentTypeId: 1,
+          documentTypeId: undefined,
           email: "",
           status: true,
         });
       }
+    } else {
+      // Limpiar el formulario cuando se cierra el modal
+      form.reset({
+        name: "",
+        lastName: "",
+        document: "",
+        documentTypeId: undefined,
+        email: "",
+        status: true,
+      });
     }
   }, [open, mode, doctorData, form]);
 
@@ -236,6 +246,7 @@ const DoctorModal = ({
                         <span className="text-destructive">*</span>
                       </FormLabel>
                       <Select
+                        key={field.value}
                         onValueChange={(value) => field.onChange(Number(value))}
                         value={field.value?.toString()}
                         disabled={isLoading}

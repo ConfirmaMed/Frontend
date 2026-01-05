@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { useState, useEffect } from "react";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import LoginPage from "./pages/public/LoginPage";
@@ -63,6 +63,7 @@ function App() {
               <Route path="/users" element={<UsersPage />} />
             </Route>
           </Route>
+          <Route path="*" element={<Navigate to={"/login"} replace />} />
         </Routes>
       </main>
       <Toaster position="top-center" />

@@ -58,7 +58,7 @@ const DoctorsPage = () => {
 
   const handleRefetchData = () => {
     refetch();
-    toast.success("Actualizando doctores");
+    toast.success("Actualizando y sincronizando doctores");
   };
 
   const handleOpenCreateModal = () => {
