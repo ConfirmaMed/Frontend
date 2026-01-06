@@ -1,4 +1,13 @@
-import { Brain, Stethoscope, Users, UserStar, type LucideIcon } from "lucide-react";
+import {
+  Brain,
+  CalendarClock,
+  CalendarPlus,
+  CalendarRange,
+  Stethoscope,
+  Users,
+  UserStar,
+  type LucideIcon,
+} from "lucide-react";
 
 interface MenuItem {
   titleKey?: string;
@@ -38,6 +47,26 @@ export const menusByRole: MenuConfig = {
       titleKey: "menu.patients",
       icon: UserStar,
       to: "/patients",
+    },
+    {
+      title: "Agendas",
+      titleKey: "menu.schedules",
+      icon: CalendarRange,
+      to: "/schedules",
+      childrens: [
+        {
+          title: "Crear agenda",
+          titleKey: "menu.createSchedule",
+          icon: CalendarPlus,
+          to: "/schedules/create",
+        },
+        {
+          title: "Agendas programadas",
+          titleKey: "menu.scheduledSchedules",
+          icon: CalendarClock,
+          to: "/schedules",
+        },
+      ],
     },
   ],
 };

@@ -11,6 +11,7 @@ import AnimeLoader from "./components/custom/AnimeLoader";
 import DoctorsPage from "./pages/admin/DoctorsPage";
 import UsersPage from "./pages/admin/UsersPage";
 import PatientsPage from "./pages/admin/PatientsPage";
+import CreateSchedulesPage from "./pages/admin/CreateSchedulesPage";
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -63,6 +64,10 @@ function App() {
               <Route path="/doctors" element={<DoctorsPage />} />
               <Route path="/users" element={<UsersPage />} />
               <Route path="/patients" element={<PatientsPage />} />
+              <Route
+                path="/schedules/create"
+                element={<CreateSchedulesPage />}
+              />
             </Route>
           </Route>
           <Route path="*" element={<Navigate to={"/login"} replace />} />

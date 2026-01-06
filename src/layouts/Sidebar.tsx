@@ -81,7 +81,7 @@ export const AppSidebar = () => {
                             </CollapsibleTrigger>
                           </TooltipTrigger>
                           <TooltipContent side="right">
-                            (module.title)
+                            {module.title}
                           </TooltipContent>
                         </Tooltip>
                         <CollapsibleContent>
