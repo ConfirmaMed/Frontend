@@ -2,7 +2,8 @@ name: Deploy Frontend to Cloud Run
 
 on:
   push:
-    branches: ["main"]
+    branches:
+      - main
 
 jobs:
   deploy:
@@ -13,7 +14,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2️⃣ Auth GCP
+      # 2️⃣ Autenticación con GCP
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
@@ -25,14 +26,13 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-      # 4️⃣ Build & Push image (🔥 PASO CLAVE 🔥)
+      # 4️⃣ Build & Push con Cloud Build (usa cloudbuild.yaml)
       - name: Build and Push Docker Image
         run: |
-          gcloud builds submit . \
-            --tag us-east1-docker.pkg.dev/confirmamed/confirmamedmainfrontend/app \
-            --build-arg VITE_API_URL=${{ secrets.VITE_API_URL }}
+          gcloud builds submit \
+            --substitutions=_VITE_API_URL=${{ secrets.VITE_API_URL }}
 
-      # 5️⃣ Deploy Cloud Run
+      # 5️⃣ Deploy a Cloud Run
       - name: Deploy to Cloud Run
         run: |
           gcloud run deploy confirmamed-frontend \
