@@ -46,6 +46,7 @@ const createSpeciality = async (specialityData: SpecialityRequest) => {
     const response = await axiosService.post(`${API_URL}`, specialityData);
     return response.data;
   } catch (error) {
+    console.log(error);
     handleAxiosError(error, "Error creando la especialidad");
   }
 };
@@ -60,10 +61,37 @@ const updateSpeciality = async (specialityData: SpecialityRequestUpdate) => {
   }
 };
 
+// Funcion para agregar doctores a una especialidad
+const addDoctorsToSpeciality = async (data: {
+  specialityId: number;
+  doctorIds: number[];
+}) => {
+  try {
+    const response = await axiosService.post(`/DoctorsHasSpecialities`, data);
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error, "Error agregando doctores a la especialidad");
+  }
+};
+
+// Funcion para obtener los doctores asociados a una especialidad
+const getDoctorsBySpeciality = async (specialityId: number) => {
+  try {
+    const response = await axiosService.get(
+      `/DoctorsHasSpecialities/specialities/${specialityId}`
+    );
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error, "Error obteniendo los doctores de la especialidad");
+  }
+};
+
 // Exportar las funciones del servicio de especialidades
 export const specialityService = {
   getAllSpecialities,
   getSpecialityById,
   createSpeciality,
   updateSpeciality,
+  addDoctorsToSpeciality,
+  getDoctorsBySpeciality,
 };

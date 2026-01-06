@@ -67,3 +67,35 @@ export const useUpdateSpeciality = () => {
     },
   });
 };
+
+// Hook para agregar doctores a una especialidad
+export const useAddDoctorsToSpeciality = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      specialityId,
+      doctorIds,
+    }: {
+      specialityId: number;
+      doctorIds: number[];
+    }) => specialityService.addDoctorsToSpeciality({ specialityId, doctorIds }),
+    onSuccess: (_, { specialityId }) => {
+      queryClient.invalidateQueries({ queryKey: ["specialities"] });
+      queryClient.invalidateQueries({ queryKey: ["speciality", specialityId] });
+    },
+  });
+};
+
+// Hook para obtener los doctores asociados a una especialidad
+export const useDoctorsBySpeciality = (specialityId: number) => {
+  return useQuery({
+    queryKey: ["doctorsBySpeciality", specialityId],
+    queryFn: () => {
+      if (!specialityId)
+        throw new Error("El ID de la especialidad es requerido");
+      return specialityService.getDoctorsBySpeciality(specialityId);
+    },
+    enabled: !!specialityId,
+    staleTime: 5 * 60 * 1000, // 5 minutos
+  });
+};

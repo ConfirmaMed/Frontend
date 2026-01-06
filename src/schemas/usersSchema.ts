@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+// Esquema de validaciones para crear un usuario
 export const userCreateSchema = z.object({
   name: z
     .string()
@@ -38,6 +39,7 @@ export const userCreateSchema = z.object({
   }),
 });
 
+// Esquema de validacion para actualizar un usuario
 export const userUpdateSchema = z.object({
   id: z
     .number({
@@ -79,5 +81,6 @@ export const userUpdateSchema = z.object({
     .optional(),
 });
 
+// Exportar tipos de formularios basados en los esquemas
 export type UserUpdateFormValues = z.infer<typeof userUpdateSchema>;
 export type UserCreateFormValues = z.infer<typeof userCreateSchema>;

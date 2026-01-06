@@ -6,7 +6,7 @@ export const handleAxiosError = (
   defaultMessage: string
 ): never => {
   if (axios.isAxiosError(error)) {
-    const message = error.response?.data.message || defaultMessage;
+    const message = error.response?.data.Message || defaultMessage;
     throw new Error(message);
   }
 

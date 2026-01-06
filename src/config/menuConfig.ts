@@ -1,9 +1,4 @@
-import {
-  Brain,
-  Stethoscope,
-  Users,
-  type LucideIcon,
-} from "lucide-react";
+import { Brain, Stethoscope, Users, UserStar, type LucideIcon } from "lucide-react";
 
 interface MenuItem {
   titleKey?: string;
@@ -37,6 +32,12 @@ export const menusByRole: MenuConfig = {
       titleKey: "menu.users",
       icon: Users,
       to: "/users",
+    },
+    {
+      title: "Pacientes",
+      titleKey: "menu.patients",
+      icon: UserStar,
+      to: "/patients",
     },
   ],
 };
