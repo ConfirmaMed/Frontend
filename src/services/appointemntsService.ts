@@ -9,7 +9,7 @@ const API_URL = "/appointments";
 const createAppointment = async (appointmentData: AppointmentRequest) => {
   try {
     const response = await axiosService.post(
-      `${API_URL}/several`,
+      `${API_URL}`,
       appointmentData
     );
     return response.data;

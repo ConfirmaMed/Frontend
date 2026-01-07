@@ -19,7 +19,7 @@ const getAllPatients = async (
       params: {
         limit,
         offset,
-        search
+        search,
       },
     });
     return response.data;
@@ -51,10 +51,7 @@ const createPatient = async (patientData: PatientRequest) => {
 // Actualizar un paciente existente
 const updatePatient = async (patientData: PatientUpdateRequest) => {
   try {
-    const response = await axiosService.put(
-      `${API_URL}/${patientData.id}`,
-      patientData
-    );
+    const response = await axiosService.put(`${API_URL}`, patientData);
     return response.data;
   } catch (error) {
     handleAxiosError(error, "Error al actualizar el paciente");
