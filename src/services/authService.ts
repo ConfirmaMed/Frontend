@@ -1,0 +1,48 @@
+import axiosService from "@/config/axiosService";
+import { handleAxiosError } from "@/utils/handleAxiosError";
+
+const API_BASE_URL = "/auth";
+
+// Funcion para que el usuario inicie sesion
+const loginService = async (request: {
+  userName: string;
+  password: string;
+}) => {
+  try {
+    const { data } = await axiosService.post(`${API_BASE_URL}/login`, request);
+    return data.items as { id: number; fullName: string };
+  } catch (error) {
+    handleAxiosError(error, "Error al iniciar sesión");
+  }
+};
+
+// Funcion para verificar el token del usuario
+const checkToken = async () => {
+  try {
+    const response = await axiosService.get(`${API_BASE_URL}/verify`);
+    console.log(response.data.success);
+    return response.data?.success === true;
+  } catch (error) {
+    handleAxiosError(error, "Error al verificar el token");
+  }
+};
+
+// Funcion para que el usuario pueda cerrar sesion correctamente
+const logoutService = async () => {
+  try {
+    const response = await axiosService.post(`${API_BASE_URL}/logout`);
+    console.log(response.data);
+    return true;
+  } catch (error) {
+    console.error("Error al cerrar sesión", error);
+    return false;
+  }
+};
+
+// Exportacion de los servicios del usuario
+export const authService = {
+  // Servicios de autenticacion
+  loginService,
+  logoutService,
+  checkToken,
+};

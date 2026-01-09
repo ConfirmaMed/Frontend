@@ -28,18 +28,17 @@ import {
   DropdownMenuTrigger,
 } from "../components/ui/dropdown-menu";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
-import { getMenuByRole } from "@/config/menuConfig";
 import {
   Collapsible,
   CollapsibleTrigger,
   CollapsibleContent,
 } from "../components/ui/collapsible";
 import LogoConfirmamed from "../components/custom/LogoConfirmamed";
+import useAuth from "@/hooks/useAuth";
+import { menuItems } from "@/config/menuConfig";
 
 export const AppSidebar = () => {
-  const { user, logout } = useAuth();
-  const modules = user ? getMenuByRole(user.rol) : [];
+  const { getInfoUser, logout } = useAuth();
   const navigate = useNavigate();
 
   return (
@@ -62,7 +61,7 @@ export const AppSidebar = () => {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {modules.map((module) => {
+              {menuItems.map((module) => {
                 if (module.childrens && module.childrens?.length > 0) {
                   return (
                     <Collapsible
@@ -165,7 +164,7 @@ export const AppSidebar = () => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton>
-                  <User2 /> {user?.nombre || "Usuario"}
+                  <User2 /> {getInfoUser()?.fullName || "Usuario"}
                   <ChevronUp className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>

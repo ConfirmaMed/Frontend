@@ -4,7 +4,6 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import LoginPage from "./pages/public/LoginPage";
 import LayoutAdmin from "./layouts/Layout";
 import PublicRoute from "./routes/PublicRoute";
-import { AuthProvider } from "./contexts/AuthContext";
 import { Toaster } from "./components/ui/sonner";
 import SpecialitiesPage from "./pages/admin/SpecialitiesPage";
 import AnimeLoader from "./components/custom/AnimeLoader";
@@ -44,9 +43,9 @@ function App() {
   }
 
   return (
-    <AuthProvider>
+    <>
       <main
-        className={`transition-opacity duration-500 ${
+        className={`transition-opacity duration-500 w-full h-screen overflow-hidden ${
           showContent ? "opacity-100" : "opacity-0"
         }`}
       >
@@ -73,8 +72,8 @@ function App() {
           <Route path="*" element={<Navigate to={"/login"} replace />} />
         </Routes>
       </main>
-      <Toaster position="top-center" />
-    </AuthProvider>
+      <Toaster position="top-center" closeButton={true} />
+    </>
   );
 }
 

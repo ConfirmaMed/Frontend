@@ -21,15 +21,6 @@ axiosService.interceptors.request.use(
   }
 );
 
-axiosService.interceptors.request.use(
-  (config) => {
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
-
 axiosService.interceptors.response.use(
   (response) => response,
   (error) => {

@@ -8,13 +8,13 @@ import {
   DropdownMenuTrigger,
 } from "../components/ui/dropdown-menu";
 import { ChevronDown } from "lucide-react";
-import { useAuth } from "@/contexts/AuthContext";
 import { navigate } from "@/lib/navigation";
 import ModeToggle from "../components/custom/ModeToggle";
-import LanguageToggle from "../components/custom/LanguageToggle";
+import useAuth from "@/hooks/useAuth";
 
 const Navbar = () => {
-  const { user, logout } = useAuth();
+
+  const { getInfoUser, logout } = useAuth();
 
   const handleLogout = () => {
     logout();
@@ -31,14 +31,14 @@ const Navbar = () => {
           <DropdownMenuTrigger className="flex items-center gap-4">
             <Avatar>
               <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback>{user?.nombre?.charAt(0) || "U"}</AvatarFallback>
+              <AvatarFallback>{getInfoUser()?.fullName?.charAt(0) || "U"}</AvatarFallback>
             </Avatar>
             <div className="hidden sm:flex items-center gap-4 focus-visible:no-underline">
               <div className="flex flex-col justify-start items-start">
-                <span>{user?.nombre || "Usuario"}</span>
-                <span className="text-xs text-muted-foreground capitalize">
-                  {user?.rol ? user.rol : "rol desconocido"}
-                </span>
+                <span>{getInfoUser()?.fullName || "Usuario"}</span>
+                {/* <span className="text-xs text-muted-foreground capitalize">
+                  {getInfoUser()?.rol ? getInfoUser().rol : "rol desconocido"}
+                </span> */}
               </div>
               <ChevronDown className="h-4 w-4" />
             </div>

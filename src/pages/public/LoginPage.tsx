@@ -4,20 +4,14 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { IconLock, IconMail, IconEye, IconEyeOff } from "@tabler/icons-react";
-import { useAuth } from "@/contexts/AuthContext";
+import { IconLock, IconEye, IconEyeOff } from "@tabler/icons-react";
 import ModeToggle from "@/components/custom/ModeToggle";
-
-const testAccounts = {
-  "administrador@test.com": {
-    password: "123456",
-    rol: "admin" as const,
-    nombre: "Administrador",
-  },
-};
+import useAuth from "@/hooks/useAuth";
+import { toast } from "sonner";
+import { User } from "lucide-react";
 
 const LoginPage = () => {
-  const [email, setEmail] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
@@ -30,32 +24,21 @@ const LoginPage = () => {
     setLoading(true);
     setError("");
 
-    // Validación simple
-    const account = testAccounts[email as keyof typeof testAccounts];
-
-    if (!account) {
-      setError("Email no encontrado");
-      setLoading(false);
-      return;
-    }
-
-    if (account.password !== password) {
-      setError("Contraseña incorrecta");
-      setLoading(false);
-      return;
-    }
-
     // Simular delay de autenticación
-    setTimeout(() => {
+    setTimeout(async () => {
       // Usar el contexto de autenticación
-      login({
-        email,
-        rol: account.rol,
-        nombre: account.nombre,
-      });
-
-      // Navegar al dashboard
-      navigate("/specialities");
+      try {
+        const response = await login({ userName: username, password });
+        toast.success(`¡Bienvenido de nuevo, ${response.fullName}!`);
+        navigate("/specialities", { replace: true });
+      } catch (error) {
+        setError("Nombre de usuario o contraseña incorrectos.");
+        toast.error(
+          "Error al iniciar sesión. Por favor, verifica tus credenciales."
+        );
+        setLoading(false);
+        return;
+      }
       setLoading(false);
     }, 1000);
   };
@@ -105,16 +88,16 @@ const LoginPage = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-sm font-semibold">
-                  Correo Electrónico
+                  Nombre de usuario
                 </Label>
                 <div className="relative">
-                  <IconMail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                  <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                   <Input
-                    id="email"
-                    type="email"
-                    placeholder="administrador@test.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    id="username"
+                    type="text"
+                    placeholder="Nombre de usuario"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
                     className="pl-10"
                     required
                   />
