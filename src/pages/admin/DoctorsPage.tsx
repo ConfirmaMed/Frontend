@@ -182,7 +182,8 @@ const DoctorsPage = () => {
                 <TableRow>
                   <TableCell colSpan={6} className="text-center">
                     <p className="text-sm text-destructive font-semibold">
-                      {error?.message || "Ocurrió un error inesperado"}
+                      {(error as Error)?.message ||
+                        "Ocurrió un error inesperado"}
                     </p>
                   </TableCell>
                 </TableRow>

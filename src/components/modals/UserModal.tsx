@@ -132,12 +132,7 @@ const UserModal = ({ open, onOpenChange, user, mode }: UserModalProps) => {
     try {
       if (mode === "edit") {
         // Actualizar usuario
-        const updateData = { ...data };
-        // Si la contraseña está vacía, no la enviar
-        if (!updateData.password || updateData.password === "") {
-          delete updateData.password;
-        }
-        await updateMutation.mutateAsync(updateData);
+        await updateMutation.mutateAsync(data as UserUpdateFormValues);
         toast.success("Usuario actualizado correctamente");
       } else {
         // Crear usuario
