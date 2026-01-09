@@ -9,6 +9,8 @@ interface LoginCredentials {
   password: string;
 }
 
+let authCache: boolean | null = null;
+
 interface AuthHook {
   checkToken: () => Promise<boolean>;
   login: (credentials: LoginCredentials) => Promise<any>;
@@ -20,55 +22,45 @@ const useAuth = (): AuthHook => {
   const navigate = useNavigate();
 
   const checkToken = useCallback(async (): Promise<boolean> => {
+    // 🔒 Si ya se verificó, no volver a pegarle al backend
+    if (authCache !== null) {
+      return authCache;
+    }
+
     try {
       const response = await authService.checkToken();
-      return response ?? false;
+      authCache = response ?? false;
+      return authCache;
     } catch (error) {
       console.error("Error verifying token:", error);
+      authCache = false;
       return false;
     }
   }, []);
 
   const logout = useCallback(async (): Promise<void> => {
     try {
-      console.log("🔒 Cerrando sesión...");
       await authService.logoutService();
       toast.success("Sesión cerrada exitosamente");
-      sessionStorage.clear();
-      localStorage.clear();
+      sessionStorage.removeItem("user");
       navigate("/login", { replace: true });
-      // Forzar recarga completa para limpiar todo
-      window.location.href = "/login";
     } catch (error) {
       console.error("Logout error:", error);
       toast.error("Ocurrió un error al cerrar sesión");
+      throw error;
     }
   }, [navigate]);
 
   const login = useCallback(
     async (credentials: LoginCredentials): Promise<any> => {
       try {
-        console.log("🔐 Iniciando sesión con:", credentials.userName);
         const response = await authService.loginService(credentials);
-        console.log("✅ Login exitoso:", response);
-
-        if (response?.id) {
-          sessionStorage.setItem("user", JSON.stringify(response));
-        }
-
-        // IMPORTANTE: Esperar un momento para que las cookies se establezcan
-        await new Promise((resolve) => setTimeout(resolve, 500));
-
-        // Redirigir directamente
-        navigate("/specialities", { replace: true });
-
         return response;
       } catch (error) {
         handleAxiosError(error, "Error al iniciar sesión");
-        throw error;
       }
     },
-    [navigate]
+    []
   );
 
   const getInfoUser = useCallback((): {

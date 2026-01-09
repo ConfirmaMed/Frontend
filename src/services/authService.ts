@@ -21,7 +21,7 @@ const checkToken = async () => {
   try {
     const response = await axiosService.get(`${API_BASE_URL}/verify`);
     console.log(response.data.success);
-    return response.data?.success ?? false;
+    return (response.data?.success as boolean) || false;
   } catch (error) {
     handleAxiosError(error, "Error al verificar el token");
   }
