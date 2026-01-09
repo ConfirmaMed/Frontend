@@ -21,7 +21,7 @@ const checkToken = async () => {
   try {
     const response = await axiosService.get(`${API_BASE_URL}/verify`);
     console.log(response.data.success);
-    return response.data?.success === true;
+    return response.data?.success || false;
   } catch (error) {
     handleAxiosError(error, "Error al verificar el token");
   }
@@ -30,8 +30,7 @@ const checkToken = async () => {
 // Funcion para que el usuario pueda cerrar sesion correctamente
 const logoutService = async () => {
   try {
-    const response = await axiosService.post(`${API_BASE_URL}/logout`);
-    console.log(response.data);
+    await axiosService.post(`${API_BASE_URL}/logout`);
     return true;
   } catch (error) {
     console.error("Error al cerrar sesión", error);
