@@ -1,49 +1,53 @@
 import { Spinner } from "@/components/ui/spinner";
 import useAuth from "@/hooks/useAuth";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { toast } from "sonner";
 
 const PublicRoute = () => {
   const { checkToken } = useAuth();
   const location = useLocation();
-
-  const hasCheckedAuth = useRef(false);
-  const hasShownToast = useRef(false);
-
   const [authState, setAuthState] = useState({
     isAuthenticated: null as boolean | null,
     isLoading: true,
   });
 
   useEffect(() => {
-    if (hasCheckedAuth.current) return;
-    hasCheckedAuth.current = true;
+    let isMounted = true;
 
     const verifyAuthentication = async () => {
       try {
         const isAuthenticated = await checkToken();
 
-        setAuthState({
-          isAuthenticated,
-          isLoading: false,
-        });
+        if (isMounted) {
+          setAuthState({
+            isAuthenticated,
+            isLoading: false,
+          });
 
-        if (isAuthenticated && !hasShownToast.current) {
-          toast.success("Ya tienes una sesión activa");
-          hasShownToast.current = true;
+          if (isAuthenticated) {
+            toast.success("Ya tienes una sesión activa");
+          }
         }
       } catch (error) {
         console.error("Error verificando autenticación:", error);
-        setAuthState({
-          isAuthenticated: false,
-          isLoading: false,
-        });
+        if (isMounted) {
+          setAuthState({
+            isAuthenticated: false,
+            isLoading: false,
+          });
+        }
       }
     };
 
-    verifyAuthentication();
-  }, [checkToken]);
+    setTimeout(() => {
+      verifyAuthentication();
+    }, 100);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [checkToken, location.pathname]);
 
   if (authState.isLoading) {
     return (
@@ -58,6 +62,7 @@ const PublicRoute = () => {
     );
   }
 
+  // Si ya está autenticado, redirigir a la página principal o a la que intentaba acceder
   if (authState.isAuthenticated) {
     const redirectTo = location.state?.from?.pathname || "/specialities";
     return <Navigate to={redirectTo} replace />;

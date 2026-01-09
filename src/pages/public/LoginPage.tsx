@@ -57,7 +57,7 @@ const LoginPage = () => {
           <div className="w-full md:w-1/2 flex flex-col items-center justify-center">
             <div className="w-fit mx-auto">
               <img
-                src="/public/svgs/doctorsLogin.svg"
+                src="/svgs/doctorsLogin.svg"
                 alt="#doctoresLogin"
                 className="w-36 lg:w-44 xl:w-60"
               />

@@ -1,19 +1,16 @@
 import { Navigate, Outlet, useLocation } from "react-router";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import useAuth from "@/hooks/useAuth";
 import { Spinner } from "@/components/ui/spinner";
 
-interface AuthState {
-  isAuthenticated: boolean | null;
-  isLoading: boolean;
-}
-
 const ProtectedRoute = () => {
   const { checkToken } = useAuth();
   const location = useLocation();
-  const hasShownToast = useRef(false);
-  const [authState, setAuthState] = useState<AuthState>({
+  const [authState, setAuthState] = useState<{
+    isAuthenticated: boolean | null;
+    isLoading: boolean;
+  }>({
     isAuthenticated: null,
     isLoading: true,
   });
@@ -31,9 +28,8 @@ const ProtectedRoute = () => {
             isLoading: false,
           });
 
-          if (!isAuthenticated && !hasShownToast.current) {
+          if (!isAuthenticated) {
             toast.error("Debes iniciar sesión para acceder a esta página");
-            hasShownToast.current = true;
           }
         }
       } catch (error) {
@@ -42,25 +38,20 @@ const ProtectedRoute = () => {
             isAuthenticated: false,
             isLoading: false,
           });
-
-          if (!hasShownToast.current) {
-            toast.error("Error de autenticación. Por favor, inicia sesión");
-            hasShownToast.current = true;
-          }
+          toast.error("Error de autenticación. Por favor, inicia sesión");
         }
       }
     };
 
-    verifyAuthentication();
+    // Pequeño delay para asegurar que las cookies estén establecidas
+    setTimeout(() => {
+      verifyAuthentication();
+    }, 100);
 
     return () => {
       isMounted = false;
     };
   }, [checkToken, location.pathname]);
-
-  useEffect(() => {
-    hasShownToast.current = false;
-  }, [location.pathname]);
 
   if (authState.isLoading) {
     return (

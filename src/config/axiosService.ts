@@ -1,40 +1,37 @@
 import axios from "axios";
-import { navigate } from "@/lib/navigation";
+import { toast } from "sonner";
 
 const axiosService = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
-  timeout: 5000,
+  timeout: 10000, // Aumenté el timeout
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
   },
-  withCredentials: true,
+  withCredentials: true, // Esto es crucial para cookies
 });
 
-// ? Interceptor para para las cookies
-axiosService.interceptors.request.use(
-  (config) => {
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
-
+// Interceptor de respuesta
 axiosService.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response) {
       if (error.response.status === 401) {
-        navigate("/login");
+        // Solo redirigir si no estamos ya en login
+        if (!window.location.pathname.includes('/login')) {
+          // Limpiar localStorage/sessionStorage si es necesario
+          sessionStorage.removeItem("user");
+          window.location.href = "/login";
+        }
       }
 
       if (error.response.status === 403) {
-        alert("No tienes permiso para acceder a este recuros");
+        toast.error("No tienes permiso para acceder a este recurso");
       }
 
       if (error.response.status >= 500) {
-        console.error(error.response.data);
+        console.error("Error del servidor:", error.response.data);
+        toast.error("Error del servidor. Por favor, intente más tarde");
       }
     }
     return Promise.reject(error);

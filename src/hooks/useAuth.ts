@@ -9,8 +9,6 @@ interface LoginCredentials {
   password: string;
 }
 
-let authCache: boolean | null = null;
-
 interface AuthHook {
   checkToken: () => Promise<boolean>;
   login: (credentials: LoginCredentials) => Promise<any>;
@@ -22,18 +20,11 @@ const useAuth = (): AuthHook => {
   const navigate = useNavigate();
 
   const checkToken = useCallback(async (): Promise<boolean> => {
-    // 🔒 Si ya se verificó, no volver a pegarle al backend
-    if (authCache !== null) {
-      return authCache;
-    }
-
     try {
       const response = await authService.checkToken();
-      authCache = response ?? false;
-      return authCache;
+      return response ?? false;
     } catch (error) {
       console.error("Error verifying token:", error);
-      authCache = false;
       return false;
     }
   }, []);
