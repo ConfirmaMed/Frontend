@@ -55,6 +55,7 @@ const useAuth = (): AuthHook => {
     async (credentials: LoginCredentials): Promise<any> => {
       try {
         const response = await authService.loginService(credentials);
+        sessionStorage.setItem("user", JSON.stringify(response));
         return response;
       } catch (error) {
         handleAxiosError(error, "Error al iniciar sesión");
