@@ -52,7 +52,7 @@ const SpecialitiesPage = () => {
   const [modalMode, setModalMode] = useState<"create" | "edit">("create");
   const [selectedSpeciality, setSelectedSpeciality] =
     useState<Speciality | null>(null);
-  const itemsPerPage = 25;
+  const itemsPerPage = 2;
 
   // Calcular offset para la paginación
   const offset = (currentPage - 1) * itemsPerPage;
