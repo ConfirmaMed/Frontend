@@ -81,7 +81,7 @@ const ShedulesPage = () => {
 
   // Estados para paginación
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 37;
+  const itemsPerPage = 25;
   const offset = (currentPage - 1) * itemsPerPage;
 
   // Estados para el modal de asignación
