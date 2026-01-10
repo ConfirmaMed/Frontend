@@ -52,25 +52,22 @@ function App() {
       >
         <Routes>
           {/* Rutas públicas */}
-          <Route element={<PublicRoute />}>
-            <Route path="/login" element={<LoginPage />} />
-          </Route>
+          {/* <Route element={<PublicRoute />}> */}
+          <Route path="/login" element={<LoginPage />} />
+          {/* </Route> */}
 
           {/* Rutas protegidas */}
-          <Route element={<ProtectedRoute />}>
-            <Route element={<LayoutAdmin />}>
-              {/* Aquí van las rutas protegidas, por ejemplo: */}
-              <Route path="/specialities" element={<SpecialitiesPage />} />
-              <Route path="/doctors" element={<DoctorsPage />} />
-              <Route path="/users" element={<UsersPage />} />
-              <Route path="/patients" element={<PatientsPage />} />
-              <Route
-                path="/schedules/create"
-                element={<CreateSchedulesPage />}
-              />
-              <Route path="/schedules" element={<ShedulesPage />} />
-            </Route>
+          {/* <Route element={<ProtectedRoute />}> */}
+          <Route element={<LayoutAdmin />}>
+            {/* Aquí van las rutas protegidas, por ejemplo: */}
+            <Route path="/specialities" element={<SpecialitiesPage />} />
+            <Route path="/doctors" element={<DoctorsPage />} />
+            <Route path="/users" element={<UsersPage />} />
+            <Route path="/patients" element={<PatientsPage />} />
+            <Route path="/schedules/create" element={<CreateSchedulesPage />} />
+            <Route path="/schedules" element={<ShedulesPage />} />
           </Route>
+          {/* </Route> */}
           <Route path="*" element={<Navigate to={"/login"} replace />} />
         </Routes>
       </main>
